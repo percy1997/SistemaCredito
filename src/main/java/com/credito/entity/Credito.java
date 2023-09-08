@@ -12,21 +12,15 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "usuario")
-public class Usuario {
+@Table(name = "credito")
+public class Credito {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "cod_usu")
-	private Integer codigoUsuario;
+	@Column(name = "cod_cre")
+	private Integer codigoCredito;
 	
-	@Column(name = "nom_usu")
-	private String nombreUsuario;
-	
-	@Column(name = "ape_usu")
-	private String apellidoUsuario;
-	
-	@Column(name = "dni_usu")
-	private int dniUsuario;
+	@Column(name = "can_cre")
+	private int cantidadCredito;
 
 }
