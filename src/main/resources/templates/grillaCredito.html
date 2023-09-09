@@ -14,6 +14,7 @@
 	<div class="container mt-4">
 
 		<h1>Seleccione Credito:</h1>
+			<form method="post" action="/sistema/registrarPrestamo">
 
 		<div class="container mt-5">
 			<div class="row contenedor-creditos">
@@ -67,35 +68,35 @@
 
 
 		<div class="row">
-
-			<div class="col-md-2 mt-5">
-				<label for="numeroDni">
-					<h3>Ingrese DNI</h3>
-				</label>
-				<input minlength="8" maxlength="8" id="numeroDni" name="numeroDni" type="text" class="form-control"
-					required>
-				<div class="invalid-feedback">
-					Ingrese un número de DNI
+				<div class="col-md-2 mt-5">
+					<label for="numeroDni">
+						<h3>Ingrese DNI</h3>
+					</label>
+					<input  id="numeroDni" name="numeroDni" type="text" class="form-control"
+						required>
+					<div class="invalid-feedback">
+						Ingrese un número de DNI
+					</div>
 				</div>
-			</div>
-			<div class="col-md-3 mt-5">
-				<label for="interes">
-					<h3>TOTAL A PAGAR</h3>
-				</label>
-				<input id="pagarTotal" name="pagarTotal" readonly class="form-control" required>
-			</div>
-			<div class="col-md-3 mt-5">
-				<label for="interes">
-					<h3>PAGO DIARIO</h3>
-				</label>
-				<input id="pagarDia" name="pagarDia" readonly class="form-control" required>
-			</div>
+				<div class="col-md-3 mt-5">
+					<label for="interes">
+						<h3>TOTAL A PAGAR</h3>
+					</label>
+					<input id="pagarTotal" name="pagarTotal" readonly class="form-control" required>
+				</div>
+				<div class="col-md-3 mt-5">
+					<label for="interes">
+						<h3>PAGO DIARIO</h3>
+					</label>
+					<input id="pagarDia" name="pagarDia" readonly class="form-control" required>
+				</div>
 
-			<div class="col-md-3 mt-5 ml-5">
-				<button style="width: 300px; height: 100px;" class="btn-solicitar btn btn-warning">
-					<h2>SOLICITAR</h2>
-				</button>
-			</div>
+				<div class="col-md-3 mt-5 ml-5">
+					<button type="submit" style="width: 300px; height: 100px;" class="btn-solicitar btn btn-warning">
+						<h2>SOLICITAR</h2>
+					</button>
+				</div>
+			</form>
 		</div>
 	</div>
 
@@ -137,7 +138,7 @@
 				} else if (valorCombo == 3) {
 					$("#numeroDiasInteres").val(15);
 					dias = $("#numeroDiasInteres").val();
-				}				
+				}
 			})
 		})
 
@@ -150,22 +151,28 @@
 			function calcularPagoDiario(total, dias) {
 				return total / dias;
 			}
+			function calcularInteres(total, interes) {
+				return total * interes / 100;
+			}
+			
 			let total
 			monto = $("#creditoSolicitado").val();
 			numeroDias = $("#numeroDiasInteres").val();
 			interes = $("#valorInteres").val();
+			
+			interesCalculado = calcularInteres(monto,interes)
 
 			$("#num1").val(monto);
-			$("#num2").val(interes);
+			$("#num2").val(interesCalculado);
 
 			var num1 = $("#num1").val();
 			var num2 = $("#num2").val();
 
 			$.get("/sistema/calculo", {num1: num1, num2: num2}, function (data) {
 				$("#pagarTotal").val(data);
-				total = $("#pagarTotal").val();				
+				total = $("#pagarTotal").val();
 				diario = calcularPagoDiario(total, numeroDias);
-				pagoDiaroRedondeado = diario.toFixed(2); 
+				pagoDiaroRedondeado = diario.toFixed(2);
 				$("#pagarDia").val(pagoDiaroRedondeado);
 			})
 
@@ -175,4 +182,5 @@
 	</script>
 
 </body>
+
 </html>

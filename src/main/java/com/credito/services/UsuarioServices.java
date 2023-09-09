@@ -11,6 +11,8 @@ public class UsuarioServices {
 	@Autowired
 	private UsuarioRepository repo;
 	
-	
+	public int obtenerCodigoPorDni(int dni) {	
+		return repo.obtenerCodigoUsuario(dni);
+	}
 	
 }

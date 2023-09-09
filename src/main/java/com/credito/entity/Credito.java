@@ -1,5 +1,6 @@
 package com.credito.entity;
 
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -22,5 +23,5 @@ public class Credito {
 	
 	@Column(name = "can_cre")
 	private int cantidadCredito;
-
+	
 }
