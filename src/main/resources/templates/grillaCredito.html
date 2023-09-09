@@ -28,67 +28,151 @@
 		<div class="row">
 
 			<div class="col-md-3 mt-5">
-				<label for="numeroDni">
-					<h2>Ingrese DNI</h2>
-				</label>
-				<input minlength="8" maxlength="8" id="numeroDni" name="numeroDni" type="text" class="form-control"
-					required>
-				<div class="invalid-feedback">
-					Ingrese DNI
-				</div>
-			</div>
-			<div class="col-md-4 mt-5">
 				<label for="creditoSolicitado">
-					<h2>Credito Solicitado</h2>
+					<h3>Credito Solicitado</h3>
 				</label>
 				<input id="creditoSolicitado" name="creditoSolicitado" readonly class="form-control" required>
 				<div class="invalid-feedback">
-					Ingrese DNI
+					Seleccionar monto
 				</div>
 			</div>
-			<div class="col-md-5 mt-5">
-				<button style="width: 300px; height: 100px;" class="btn-solicitar btn btn-warning">
-					<h2>SOLICITAR</h2>
+			<div class="col-md-3 mt-5">
+				<label for="tiempo">
+					<h3>Tiempo</h3>
+				</label>
+				<select id="tiempo" name="tiempo" class="form-control mr-sm-2" required disabled>
+					<option value="" selected></option>
+					<option name="dias" id="dias" th:each="comboInt:${interes}" th:text="${comboInt.diaInteres}"
+						th:value="${comboInt.codigoInteres}">
+					</option>
+				</select>
+				<div class="invalid-feedback">
+					Seleccione
+				</div>
+			</div>
+			<div class="col-md-3 mt-5">
+				<label for="interes">
+					<h3>Interés</h3>
+				</label>
+				<input id="interes" name="interes" readonly class="form-control" required>
+				<input id="valorInteres" type="hidden">
+				<input id="numeroDiasInteres" type="hidden">
+			</div>
+			<div class="col-md-3 mt-5">
+				<button style="width: 200px; height: 80px;" class="btn-calcular btn btn-warning mt-3">
+					<h2>CALCULAR</h2>
 				</button>
 			</div>
 		</div>
 
 
+		<div class="row">
+
+			<div class="col-md-2 mt-5">
+				<label for="numeroDni">
+					<h3>Ingrese DNI</h3>
+				</label>
+				<input minlength="8" maxlength="8" id="numeroDni" name="numeroDni" type="text" class="form-control"
+					required>
+				<div class="invalid-feedback">
+					Ingrese un número de DNI
+				</div>
+			</div>
+			<div class="col-md-3 mt-5">
+				<label for="interes">
+					<h3>TOTAL A PAGAR</h3>
+				</label>
+				<input id="pagarTotal" name="pagarTotal" readonly class="form-control" required>
+			</div>
+			<div class="col-md-3 mt-5">
+				<label for="interes">
+					<h3>PAGO DIARIO</h3>
+				</label>
+				<input id="pagarDia" name="pagarDia" readonly class="form-control" required>
+			</div>
+
+			<div class="col-md-3 mt-5 ml-5">
+				<button style="width: 300px; height: 100px;" class="btn-solicitar btn btn-warning">
+					<h2>SOLICITAR</h2>
+				</button>
+			</div>
+		</div>
 	</div>
 
+	<form id="sumForm">
+		<input type="hidden" id="num1">
+		<input type="hidden" id="num2">
+	</form>
+
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"
+		integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+"
+		crossorigin="anonymous"></script>
 	<script>
 
 		$(document).on("click", ".celda", function () {
 			let cred;
 			cred = $(this).val();
 			$("#creditoSolicitado").val(cred);
+			$("#tiempo").prop("disabled", false);
+
 		})
 
 	</script>
 
 	<script>
-			// Example starter JavaScript for disabling form submissions if there are invalid fields
-			(function () {
-				'use strict';
-				window.addEventListener('load', function () {
-					// Fetch all the forms we want to apply custom Bootstrap validation styles to
-					var forms = document.getElementsByClassName('needs-validation');
-					// Loop over them and prevent submission
-					var validation = Array.prototype.filter.call(forms, function (form) {
-						form.addEventListener('submit', function (event) {
-							if (form.checkValidity() === false) {
-								event.preventDefault();
-								event.stopPropagation();
-							}
-							form.classList.add('was-validated');
-						}, false);
-					});
-				}, false);
-			})();
-	</script>
-</body>
+		$(document).on("change", "#tiempo", function () {
+			valorCombo = $(this).val();
+			$.get("/sistema/interesPorCodigo?dias=" + valorCombo, function (response) {
+				$("#interes").val(response.cantidadInteres);
+				$("#valorInteres").val(response.valorInteres);
+				valor = $("#valorInteres").val();
 
+				if (valorCombo == 1) {
+					$("#numeroDiasInteres").val(5);
+					dias = $("#numeroDiasInteres").val();
+				} else if (valorCombo == 2) {
+					$("#numeroDiasInteres").val(10);
+					dias = $("#numeroDiasInteres").val();
+				} else if (valorCombo == 3) {
+					$("#numeroDiasInteres").val(15);
+					dias = $("#numeroDiasInteres").val();
+				}				
+			})
+		})
+
+	</script>
+
+	<script>
+
+		$(document).on("click", ".btn-calcular", function () {
+
+			function calcularPagoDiario(total, dias) {
+				return total / dias;
+			}
+			let total
+			monto = $("#creditoSolicitado").val();
+			numeroDias = $("#numeroDiasInteres").val();
+			interes = $("#valorInteres").val();
+
+			$("#num1").val(monto);
+			$("#num2").val(interes);
+
+			var num1 = $("#num1").val();
+			var num2 = $("#num2").val();
+
+			$.get("/sistema/calculo", {num1: num1, num2: num2}, function (data) {
+				$("#pagarTotal").val(data);
+				total = $("#pagarTotal").val();				
+				diario = calcularPagoDiario(total, numeroDias);
+				pagoDiaroRedondeado = diario.toFixed(2); 
+				$("#pagarDia").val(pagoDiaroRedondeado);
+			})
+
+			//$("#pagarDia").val(diario);
+
+		})	
+	</script>
+
+</body>
 </html>

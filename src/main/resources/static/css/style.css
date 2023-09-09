@@ -20,10 +20,31 @@ body{
     border-style: solid;
 }
 #numeroDni{
-	font-size: 35px;
-	width: 180px;
+	font-size: 30px;
+	width: 155px;
 }
 #creditoSolicitado{
-	font-size: 35px;
-	width: 250px;
+	font-size: 30px;
+	width: 220px;
+	text-align: center;
+}
+#tiempo{
+	font-size: 30px;
+	width: 200px;
+	text-align: center;
+}
+#interes{
+	font-size: 30px;
+	width: 200px;
+	text-align: center;
+}
+#pagarDia{
+	font-size: 30px;
+	width: 200px;
+	text-align: center;
+}
+#pagarTotal{
+	font-size: 30px;
+	width: 200px;
+	text-align: center;
 }
